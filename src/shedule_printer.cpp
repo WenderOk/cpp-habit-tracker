@@ -36,4 +36,8 @@ void showSchedule()
 
         std::cout << "\n";
     }
+
+    std::cout << "Нажмите Enter для возращения в меню: ";
+    std::cin.ignore();
+    std::cin.get();
 }
