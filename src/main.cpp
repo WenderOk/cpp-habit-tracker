@@ -66,6 +66,8 @@ void saveToFile()
 
 void addHabit()
 {
+    std::cout << "\033[2J\033[1;1H";
+
     if (habit_count >= MAX_HABITS)
     {
         std::cout << "Достигнут максимум привычек\n";
@@ -75,8 +77,8 @@ void addHabit()
     Habit h{};
     
     std::cout << "Введите название привычки: ";
-    std::cin.ignore();
-    std::cin.getline(h.name, NAME_LEN);
+    std::cin.ignore(); // Для очистки буфера от \n
+    std::cin.getline(h.name, NAME_LEN); // берем строку вместе с проблелом
     
     std::cout << "Введите частоту повторения (в днях): ";
     std::cin >> h.days_frequency;
@@ -109,6 +111,8 @@ void addHabit()
 
 void removeHabit()
 {
+    std::cout << "\033[2J\033[1;1H";
+
     if (habit_count == 0)
     {
         std::cout << "Список привычек пуст\n";
@@ -135,6 +139,8 @@ void removeHabit()
 
 void showSchedule()
 {
+    std::cout << "\033[2J\033[1;1H";
+
     const char* dayNames[7] = {"Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"};
     
     std::cout << "============ РАСПИСАНИЕ НА НЕДЕЛЮ ============\n\n";
@@ -173,6 +179,7 @@ void showSchedule()
 
 void updateProgress()
 {
+    std::cout << "\033[2J\033[1;1H";
     if (habit_count == 0)
     {
         std::cout << "Список привычек пуст\n";
@@ -220,6 +227,7 @@ int main()
     int choice{};
     do 
     {
+        std::cout << "\033[2J\033[1;1H"; // Для очищения консоли
         std::cout << "\n===== ТРЕКЕР ПРИВЫЧЕК =====\n";
         std::cout << "1. Добавить привычку\n";
         std::cout << "2. Удалить привычку\n";
