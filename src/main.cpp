@@ -8,16 +8,16 @@
 struct Habit
 {
     char name[NAME_LEN];
-    int daysFrequency;     
-    bool isBoolean;         
-    int targetValue;
-    int currentValue;
+    int days_frequency;     
+    bool is_boolean;         
+    int target_value;
+    int current_value;
     int completed;        
     int days[7];           
 };
 
 Habit habits[MAX_HABITS];
-int habitCount{};
+int habit_count{};
 const char* fileName = "habits_data.txt";
 
 void loadFromFile()
@@ -25,22 +25,21 @@ void loadFromFile()
     FILE* file = std::fopen(fileName, "r");
     if (!file) return;
     
-    std::fscanf(file, "%d\n", &habitCount);
-    for (int i{}; i < habitCount; i++)
+    std::fscanf(file, "%d\n", &habit_count);
+    for (int i{}; i < habit_count; i++)
     {
         std::fgets(habits[i].name, NAME_LEN, file);
         char* newline = std::strchr(habits[i].name, '\n');
         if (newline) *newline = '\0';
         
-        std::fscanf(file, "%d\n", &habits[i].daysFrequency);
-        std::fscanf(file, "%d\n", &habits[i].isBoolean);
-        std::fscanf(file, "%d\n", &habits[i].targetValue);
-        std::fscanf(file, "%d\n", &habits[i].currentValue);
+        std::fscanf(file, "%d\n", &habits[i].days_frequency);
+        std::fscanf(file, "%d\n", &habits[i].is_boolean);
+        std::fscanf(file, "%d\n", &habits[i].target_value);
+        std::fscanf(file, "%d\n", &habits[i].current_value);
         std::fscanf(file, "%d\n", &habits[i].completed);
         
         for (int j{}; j < 7; j++)
             std::fscanf(file, "%d\n", &habits[i].days[j]);
-        
     }
     std::fclose(file);
 }
@@ -50,14 +49,14 @@ void saveToFile()
     FILE* file = std::fopen(fileName, "w");
     if (!file) return;
     
-    std::fprintf(file, "%d\n", habitCount);
-    for (int i{}; i < habitCount; i++)
+    std::fprintf(file, "%d\n", habit_count);
+    for (int i{}; i < habit_count; i++)
     {
         std::fprintf(file, "%s\n", habits[i].name);
-        std::fprintf(file, "%d\n", habits[i].daysFrequency);
-        std::fprintf(file, "%d\n", habits[i].isBoolean);
-        std::fprintf(file, "%d\n", habits[i].targetValue);
-        std::fprintf(file, "%d\n", habits[i].currentValue);
+        std::fprintf(file, "%d\n", habits[i].days_frequency);
+        std::fprintf(file, "%d\n", habits[i].is_boolean);
+        std::fprintf(file, "%d\n", habits[i].target_value);
+        std::fprintf(file, "%d\n", habits[i].current_value);
         std::fprintf(file, "%d\n", habits[i].completed);
         for (int j{}; j < 7; j++)
             std::fprintf(file, "%d\n", habits[i].days[j]);
@@ -67,7 +66,7 @@ void saveToFile()
 
 void addHabit()
 {
-    if (habitCount >= MAX_HABITS)
+    if (habit_count >= MAX_HABITS)
     {
         std::cout << "Достигнут максимум привычек\n";
         return;
@@ -80,15 +79,15 @@ void addHabit()
     std::cin.getline(h.name, NAME_LEN);
     
     std::cout << "Введите частоту повторения (в днях): ";
-    std::cin >> h.daysFrequency;
+    std::cin >> h.days_frequency;
     
     std::cout << "Тип привычки (1 - да/нет, 0 - число): ";
-    std::cin >> h.isBoolean;
+    std::cin >> h.is_boolean;
     
-    if (!h.isBoolean)
+    if (!h.is_boolean)
     {
         std::cout << "Введите целевое значение: ";
-        std::cin >> h.targetValue;
+        std::cin >> h.target_value;
     }
     
     std::cout << "Выберите дни недели (введите номера дней через пробел, 0 для выхода):\n";
@@ -102,39 +101,39 @@ void addHabit()
         
     }
     
-    habits[habitCount] = h;
-    habitCount++;
+    habits[habit_count] = h;
+    habit_count++;
     std::cout << "Привычка добавлена!\n";
     saveToFile();
 }
 
 void removeHabit()
 {
-    if (habitCount == 0)
+    if (habit_count == 0)
     {
         std::cout << "Список привычек пуст\n";
         return;
     }
     
-    for (int i{}; i < habitCount; i++)
+    for (int i{}; i < habit_count; i++)
         std::cout << i + 1 << ". " << habits[i].name << "\n";
     
     int index{};
     std::cout << "Введите номер привычки для удаления: ";
     std::cin >> index;
     
-    if (index > 0 && index <= habitCount)
+    if (index > 0 && index <= habit_count)
     {
-        for (int i = index - 1; i < habitCount - 1; i++)
+        for (int i = index - 1; i < habit_count - 1; i++)
             habits[i] = habits[i + 1];
         
-        habitCount--;
+        habit_count--;
         std::cout << "Привычка удалена!\n";
         saveToFile();
     }
 }
 
-void showWeeklySchedule()
+void showSchedule()
 {
     const char* dayNames[7] = {"Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"};
     
@@ -143,29 +142,29 @@ void showWeeklySchedule()
     for (int i{}; i < 7; i++)
     {
         std::cout << dayNames[i] << ":\n";
-        int hasHabits{};
+        int has_habits{};
         
-        for (int j{}; j < habitCount; j++)
+        for (int j{}; j < habit_count; j++)
         {
             if (habits[j].days[i] == 1)
             {
                 std::cout << "  - " << habits[j].name;
-                std::cout << " (каждые " << habits[j].daysFrequency << " дн.)";
+                std::cout << " (каждые " << habits[j].days_frequency << " дн.)";
                 
-                if (habits[j].isBoolean)
+                if (habits[j].is_boolean)
                 {
                     std::cout << " [да/нет]";
                     if (habits[j].completed) std::cout << " (выполнено)";
                 }
                 else 
-                    std::cout << " [" << habits[j].currentValue << "/" << habits[j].targetValue << "]";
+                    std::cout << " [" << habits[j].current_value << "/" << habits[j].target_value << "]";
                 
                 std::cout << "\n";
-                hasHabits = 1;
+                has_habits = 1;
             }
         }
         
-        if (!hasHabits)
+        if (!has_habits)
             std::cout << "  Нет привычек\n";
 
         std::cout << "\n";
@@ -174,13 +173,13 @@ void showWeeklySchedule()
 
 void updateProgress()
 {
-    if (habitCount == 0)
+    if (habit_count == 0)
     {
         std::cout << "Список привычек пуст\n";
         return;
     }
     
-    for (int i{}; i < habitCount; i++)
+    for (int i{}; i < habit_count; i++)
         std::cout << i + 1 << ". " << habits[i].name << "\n";
     
     
@@ -188,11 +187,11 @@ void updateProgress()
     std::cout << "Выберите привычку: ";
     std::cin >> index;
     
-    if (index > 0 && index <= habitCount)
+    if (index > 0 && index <= habit_count)
     {
         Habit& h = habits[index - 1];
         
-        if (h.isBoolean) 
+        if (h.is_boolean) 
         {
             std::cout << "Выполнено? (1 - да, 0 - нет): ";
             std::cin >> h.completed;   
@@ -200,9 +199,9 @@ void updateProgress()
         else 
         {
             std::cout << "Введите текущее значение: ";
-            std::cin >> h.currentValue;
+            std::cin >> h.current_value;
             
-            if (h.currentValue >= h.targetValue)
+            if (h.current_value >= h.target_value)
             {
                 h.completed = 1;
                 std::cout << "Цель достигнута!\n";
@@ -239,7 +238,7 @@ int main()
                 removeHabit();
                 break;
             case 3:
-                showWeeklySchedule();
+                showSchedule();
                 break;
             case 4:
                 updateProgress();
