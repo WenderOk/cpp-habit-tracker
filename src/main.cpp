@@ -1,15 +1,16 @@
 #include <iostream>
 #include <cstdio>
 #include <cstring>
+#include <ctime>
 
-#define MAX_HABITS 50
-#define NAME_LEN 50
+const int MAX_HABITS{50};
+const int NAME_LEN{50};
 
 #include "habit.cpp"
 
 Habit habits[MAX_HABITS];
 int habit_count{};
-const char* fileName = "habits_data.txt";
+const char* fileName{"habits_data.txt"};
 
 #include "loader.cpp"
 #include "saver.cpp"
@@ -52,7 +53,10 @@ int main()
                 std::cout << "До свидания!\n";
                 break;
             default:
-                std::cout << "Неверный выбор\n";
+                std::cout << "Неверный выбор\n";    
+                std::cout << "Нажмите Enter для возращения в меню: ";
+                std::cin.ignore();
+                std::cin.get();
         }
     } while (choice != 5);
     

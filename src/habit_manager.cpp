@@ -14,9 +14,6 @@ void addHabit()
     std::cin.ignore(); // Для очистки буфера от \n
     std::cin.getline(h.name, NAME_LEN); // берем строку вместе с проблелом
     
-    std::cout << "Введите частоту повторения (в днях): ";
-    std::cin >> h.days_frequency;
-    
     std::cout << "Тип привычки (1 - да/нет, 0 - число): ";
     std::cin >> h.is_boolean;
     
@@ -34,7 +31,6 @@ void addHabit()
     {
         if (dayNum >= 1 && dayNum <= 7)
             h.days[dayNum-1] = 1;
-        
     }
     
     habits[habit_count] = h;
@@ -62,7 +58,7 @@ void removeHabit()
     
     if (index > 0 && index <= habit_count)
     {
-        for (int i = index - 1; i < habit_count - 1; i++)
+        for (int i{index - 1}; i < habit_count - 1; i++)
             habits[i] = habits[i + 1];
         
         habit_count--;
