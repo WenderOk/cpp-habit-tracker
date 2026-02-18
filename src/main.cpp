@@ -12,6 +12,8 @@ Habit habits[MAX_HABITS];
 int habit_count{};
 const char* fileName{"habits_data.txt"};
 
+void wait_input();
+
 #include "loader.cpp"
 #include "saver.cpp"
 #include "habit_manager.cpp"
@@ -34,31 +36,44 @@ int main()
         std::cout << "5. Выход\n";
         std::cout << "Выберите действие: ";
         std::cin >> choice;
-        
-        switch (choice)
+
+        if (std::cin.fail() || (std::cin.peek() != '\n') || ((choice < 0) || (choice > 5)))
         {
-            case 1:
-                addHabit();
-                break;
-            case 2:
-                removeHabit();
-                break;
-            case 3:
-                showSchedule();
-                break;
-            case 4:
-                updateProgress();
-                break;
-            case 5:
-                std::cout << "До свидания!\n";
-                break;
-            default:
-                std::cout << "Неверный выбор\n";    
-                std::cout << "Нажмите Enter для возращения в меню: ";
-                std::cin.ignore();
-                std::cin.get();
+            std::cin.clear();
+            std::cin.ignore(10000, '\n');
+        }
+        else
+        {
+            switch (choice)
+            {
+                case 1:
+                    addHabit();
+                    break;
+                case 2:
+                    removeHabit();
+                    break;
+                case 3:
+                    showSchedule();
+                    break;
+                case 4:
+                    updateProgress();
+                    break;
+                case 5:
+                    std::cout << "До свидания!\n";
+                    break;
+                default:
+                    std::cout << "Неверный выбор\n";
+                    wait_input();
+            }
         }
     } while (choice != 5);
     
     return 0;
+}
+
+void wait_input()
+{
+    std::cout << "Нажмите Enter чтобы продолжить: ";
+    std::cin.ignore();
+    std::cin.get();
 }

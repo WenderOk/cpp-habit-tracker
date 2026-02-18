@@ -11,6 +11,7 @@ void updateProgress()
     if (habit_count == 0)
     {
         std::cout << "Список привычек пуст\n";
+        wait_input();
         return;
     }
     
@@ -20,39 +21,82 @@ void updateProgress()
     int cur_wday{get_weekday()};
     int index{};
     std::cout << "Выберите привычку: ";
-    std::cin >> index;
 
-    if (index > 0 && index <= habit_count)
+    while(true)
     {
-        Habit& h{habits[index - 1]};
-
-        if(!h.days[cur_wday])
+        std::cin >> index;
+        if (std::cin.fail() || (std::cin.peek() != '\n') || ((index < 0) || (index > habit_count)))
         {
-            std::cout << "На сегодня нет этой привычки" << "\n";
-            std::cout << "Нажмите Enter для возращения в меню: ";
-            std::cin.ignore();
-            std::cin.get();
-            return;
+            std::cout << "Введено некорректное значение!\nВведите номер привычки из списка: ";
+            std::cin.clear();
+            std::cin.ignore(10000, '\n');
         }
+        else break;
+    }
         
-        if (h.is_boolean) 
+    Habit& h{habits[index - 1]};
+
+    if(!h.days[cur_wday])
+    {
+        std::cout << "На сегодня нет этой привычки" << "\n";
+        wait_input();
+        return;
+    }
+    
+    if (h.is_boolean) 
+    {
+        std::cout << "Выполнено? (1 - да, 0 - нет): ";
+        int input{};
+
+        while(true) // Проверка на корректность ввода
         {
-            std::cout << "Выполнено? (1 - да, 0 - нет): ";
-            std::cin >> h.completed[cur_wday];   
-        }
-        else 
-        {
-            std::cout << "Введите текущее значение: ";
-            std::cin >> h.current_value[cur_wday];
-            
-            if (h.current_value[cur_wday] >= h.target_value)
+            std::cin >> input;
+            if(std::cin.fail() || (std::cin.peek() != '\n') || ((input != 1) && (input != 0)))
             {
-                h.completed[cur_wday] = 1;
-                std::cout << "Цель достигнута!\n";
+                std::cout << "Введено некорректное значение!\nВведите 0 или 1: ";
+                std::cin.clear(); // Сброс флага ошибки
+                std::cin.ignore(10000, '\n'); // Очистка буфера от мусора
             }
+            else
+            {
+                h.completed[cur_wday] = (input == 1) ? 1 : 0;
+                break;
+            } 
+        }   
+    }
+    else 
+    {
+        std::cout << "Введите текущее значение: ";
+        std::cin >> h.current_value[cur_wday];
+        int input{};
+
+        while(true) // Проверка на корректность ввода
+        {
+            std::cin >> input;
+            if(std::cin.fail() || (std::cin.peek() != '\n') || (input < 0))
+            {
+                std::cout << "Введено некорректное значение!\nВведите целое число больше нуля: ";
+                std::cin.clear();
+                std::cin.ignore(10000, '\n');
+            }
+            else
+            {
+                h.current_value[cur_wday] = input;
+                break;
+            } 
+        }                
+        
+        if (h.current_value[cur_wday] >= h.target_value)
+        {
+            h.completed[cur_wday] = 1;
+            std::cout << "Цель достигнута!\n";
         }
+    }
+    
+    
         
         saveToFile();
         std::cout << "Прогресс обновлен!\n";
-    }
+        wait_input();
+    
 }
