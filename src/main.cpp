@@ -2,63 +2,137 @@
 #include <cstdio>
 #include <cstring>
 #include <ctime>
+#include <vector>
+#include <string>
 
-const int MAX_HABITS{50};
-const int NAME_LEN{50};
+// Подключаем FTXUI
+#include "FTXUI/include/ftxui/component/screen_interactive.hpp"
+#include "FTXUI/include/ftxui/component/component.hpp"
+#include "FTXUI/include/ftxui/dom/elements.hpp"
 
-#include "habit.cpp"
+#include "habit.h"
+
+using namespace ftxui;
+using namespace std;
 
 Habit habits[MAX_HABITS];
-int habit_count{};
-const char* fileName{"habits_data.txt"};
+int habit_count = 0;
+const char* fileName = "habits_data.txt";
 
+// Объявляем функции
+void loadFromFile();
+void saveToFile();
+void addHabit();
+void removeHabit();
+void showSchedule();
+void updateProgress();
+int getWeekday();
+void showMessage(string msg, string title);
+
+// Подключаем остальные файлы
 #include "loader.cpp"
 #include "saver.cpp"
 #include "habit_manager.cpp"
 #include "updater.cpp"
 #include "shedule_printer.cpp"
 
-int main()
-{
+// Простая функция для показа сообщений
+void showMessage(string msg, string title) {
+    auto screen = ScreenInteractive::TerminalOutput();
+    
+    // Простой диалог
+    auto component = Renderer([&] {
+        return vbox({
+            text(title) | bold | center,
+            separator(),
+            text(msg) | center,
+            separator(),
+            text("Нажмите Enter") | dim,
+        }) | center | border;
+    });
+    
+    // Обработка нажатия Enter
+    component |= CatchEvent([&](Event event) {
+        if (event == Event::Return) {
+            screen.Exit();
+            return true;
+        }
+        return false;
+    });
+    
+    screen.Loop(component);
+}
+
+// Главное меню
+int main() {
     loadFromFile();
     
-    int choice{};
-    do 
-    {
-        std::cout << "\033[2J\033[1;1H"; // Для очищения консоли
-        std::cout << "\n===== ТРЕКЕР ПРИВЫЧЕК =====\n";
-        std::cout << "1. Добавить привычку\n";
-        std::cout << "2. Удалить привычку\n";
-        std::cout << "3. Показать расписание\n";
-        std::cout << "4. Обновить прогресс\n";
-        std::cout << "5. Выход\n";
-        std::cout << "Выберите действие: ";
-        std::cin >> choice;
-        
-        switch (choice)
-        {
-            case 1:
-                addHabit();
-                break;
-            case 2:
-                removeHabit();
-                break;
-            case 3:
-                showSchedule();
-                break;
-            case 4:
-                updateProgress();
-                break;
-            case 5:
-                std::cout << "До свидания!\n";
-                break;
-            default:
-                std::cout << "Неверный выбор\n";    
-                std::cout << "Нажмите Enter для возращения в меню: ";
-                std::cin.ignore();
-                std::cin.get();
-        }
-    } while (choice != 5);
+    auto screen = ScreenInteractive::TerminalOutput();
     
+    // Простое меню
+    vector<string> menuItems = {
+        "1. Добавить привычку",
+        "2. Удалить привычку",
+        "3. Показать расписание",
+        "4. Обновить прогресс",
+        "5. Выход"
+    };
+    
+    int selected = 0;
+    auto menu = Menu(&menuItems, &selected);
+    
+    // Создаем интерфейс
+    auto component = Renderer(menu, [&] {
+        int today = getWeekday();
+        int todayCount = 0;
+        for (int i = 0; i < habit_count; i++) {
+            if (habits[i].days[today]) todayCount++;
+        }
+        
+        return vbox({
+            // Заголовок
+            text("ТРЕКЕР ПРИВЫЧЕК") | bold | center | color(Color::Cyan),
+            separator(),
+            
+            // Статистика и меню в одной строке
+            hbox({
+                // Статистика слева
+                vbox({
+                    text("Статистика") | bold,
+                    text("Всего: " + to_string(habit_count)),
+                    text("На сегодня: " + to_string(todayCount)),
+                }) | border,
+                
+                // Меню справа
+                menu->Render() | border,
+            }),
+            
+            separator(),
+            text("Enter - выбрать | Esc - выход") | dim,
+        }) | border;
+    });
+    
+    // Обработка выбора пункта меню
+    component |= CatchEvent([&](Event event) {
+        if (event == Event::Return) {
+            screen.Exit(); // Выходим из меню
+            
+            // Вызываем нужную функцию
+            switch(selected) {
+                case 0: addHabit(); break;
+                case 1: removeHabit(); break;
+                case 2: showSchedule(); break;
+                case 3: updateProgress(); break;
+                case 4: return true; // Выход
+            }
+            
+            // Возвращаемся в меню
+            main(); // Простой перезапуск
+            return true;
+        }
+        return false;
+    });
+    
+    screen.Loop(component);
     return 0;
 }
