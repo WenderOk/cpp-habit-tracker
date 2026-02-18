@@ -1,68 +1,127 @@
-void addHabit()
-{
-    std::cout << "\033[2J\033[1;1H";
+#include "habit.h"
+#include <iostream>
+#include <cstring>
+using namespace std;
 
-    if (habit_count >= MAX_HABITS)
-    {
-        std::cout << "Достигнут максимум привычек\n";
+void saveToFile();
+void showMessage(string msg, string title);
+
+void addHabit() {
+    system("cls");
+    
+    if (habit_count >= MAX_HABITS) {
+        cout << "\nОШИБКА: Достигнут максимум привычек!\n";
+        cout << "\nНажмите Enter...";
+        cin.get();
         return;
     }
     
-    Habit h{};
+    Habit h;
     
-    std::cout << "Введите название привычки: ";
-    std::cin.ignore(); // Для очистки буфера от \n
-    std::cin.getline(h.name, NAME_LEN); // берем строку вместе с проблелом
+    cout << "\n=== ДОБАВЛЕНИЕ ПРИВЫЧКИ ===\n\n";
+    cout << "Название: ";
+    cin.ignore();
+    cin.getline(h.name, NAME_LEN);
     
-    std::cout << "Тип привычки (1 - да/нет, 0 - число): ";
-    std::cin >> h.is_boolean;
-    
-    if (!h.is_boolean)
-    {
-        std::cout << "Введите целевое значение: ";
-        std::cin >> h.target_value;
+    if (strlen(h.name) == 0) {
+        showMessage("Имя не может быть пустым!", "Ошибка");
+        return;
     }
     
-    std::cout << "Выберите дни недели (введите номера дней через пробел, 0 для выхода):\n";
-    std::cout << "1 - Пн 2 - Вт 3 - Ср 4 - Чт 5 - Пт 6 - Сб 7 - Вс\n";
+    cout << "\nТип привычки:\n";
+    cout << "0 - Числовая\n";
+    cout << "1 - Да/Нет\n";
+    cout << "Выбор: ";
+    cin >> h.is_boolean;
     
-    int dayNum{};
-    while (std::cin >> dayNum && dayNum != 0)
-    {
-        if (dayNum >= 1 && dayNum <= 7)
-            h.days[dayNum-1] = 1;
+    if (!h.is_boolean) {
+        cout << "Целевое значение: ";
+        cin >> h.target_value;
+        
+        if (h.target_value <= 0) {
+            showMessage("Цель должна быть больше 0!", "Ошибка");
+            return;
+        }
+    }
+    
+    // Обнуляем массивы
+    for (int i = 0; i < 7; i++) {
+        h.current_value[i] = 0;
+        h.completed[i] = 0;
+        h.days[i] = 0;
+    }
+    
+    cout << "\n=== ВЫБОР ДНЕЙ ===\n";
+    cout << "1-Пн 2-Вт 3-Ср 4-Чт 5-Пт 6-Сб 7-Вс\n";
+    cout << "Вводите числа, 0 - конец\n\n";
+    
+    int day;
+    bool hasDays = false;
+    
+    while (true) {
+        cout << "День: ";
+        cin >> day;
+        
+        if (day == 0) break;
+        
+        if (day >= 1 && day <= 7) {
+            h.days[day-1] = 1;
+            hasDays = true;
+        }
+    }
+    
+    if (!hasDays) {
+        showMessage("Выберите хотя бы один день!", "Ошибка");
+        return;
     }
     
     habits[habit_count] = h;
     habit_count++;
-    std::cout << "Привычка добавлена!\n";
     saveToFile();
+    
+    showMessage("Привычка добавлена!", "Успех");
 }
 
-void removeHabit()
-{
-    std::cout << "\033[2J\033[1;1H";
-
-    if (habit_count == 0)
-    {
-        std::cout << "Список привычек пуст\n";
+void removeHabit() {
+    system("cls");
+    
+    if (habit_count == 0) {
+        showMessage("Список привычек пуст!", "Ошибка");
         return;
     }
     
-    for (int i{}; i < habit_count; i++)
-        std::cout << i + 1 << ". " << habits[i].name << "\n";
+    cout << "\n=== УДАЛЕНИЕ ПРИВЫЧКИ ===\n\n";
     
-    int index{};
-    std::cout << "Введите номер привычки для удаления: ";
-    std::cin >> index;
+    for (int i = 0; i < habit_count; i++) {
+        cout << i+1 << ". " << habits[i].name;
+        if (habits[i].is_boolean) {
+            cout << " [Да/Нет]";
+        } else {
+            cout << " [Цель: " << habits[i].target_value << "]";
+        }
+        cout << "\n";
+    }
     
-    if (index > 0 && index <= habit_count)
-    {
-        for (int i{index - 1}; i < habit_count - 1; i++)
-            habits[i] = habits[i + 1];
+    cout << "\nНомер (0 - отмена): ";
+    int idx;
+    cin >> idx;
+    
+    if (idx == 0) return;
+    
+    if (idx >= 1 && idx <= habit_count) {
+        cout << "Удалить? (1-да, 0-нет): ";
+        int confirm;
+        cin >> confirm;
         
-        habit_count--;
-        std::cout << "Привычка удалена!\n";
-        saveToFile();
+        if (confirm) {
+            for (int i = idx-1; i < habit_count-1; i++) {
+                habits[i] = habits[i+1];
+            }
+            habit_count--;
+            saveToFile();
+            showMessage("Привычка удалена!", "Успех");
+        }
+    } else {
+        showMessage("Неверный номер!", "Ошибка");
     }
 }
