@@ -1,0 +1,2 @@
+void addHabit();
+void removeHabit();

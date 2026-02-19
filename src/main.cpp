@@ -3,22 +3,16 @@
 #include <cstring>
 #include <ctime>
 
-const int MAX_HABITS{50};
-const int NAME_LEN{50};
-
-#include "habit.cpp"
+#include "habit.h"
 
 Habit habits[MAX_HABITS];
-int habit_count{};
-const char* fileName{"habits_data.txt"};
+int habit_count = 0;
+const char* fileName = "habits_data.txt";
 
-void wait_input();
-
-#include "loader.cpp"
-#include "saver.cpp"
-#include "habit_manager.cpp"
-#include "updater.cpp"
-#include "shedule_printer.cpp"
+#include "file_mgr.h"
+#include "habit_mgr.h"
+#include "updater.h"
+#include "shedule_printer.h"
 
 int main()
 {
@@ -69,11 +63,4 @@ int main()
     } while (choice != 5);
     
     return 0;
-}
-
-void wait_input()
-{
-    std::cout << "Нажмите Enter чтобы продолжить: ";
-    std::cin.ignore();
-    std::cin.get();
 }

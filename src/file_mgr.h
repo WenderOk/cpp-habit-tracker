@@ -1,0 +1,2 @@
+void saveToFile();
+void loadFromFile();

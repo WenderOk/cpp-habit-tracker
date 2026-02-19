@@ -1,3 +1,10 @@
+#include <iostream>
+#include <cstdio>
+
+#include "habit.h"
+#include "shedule_printer.h"
+#include "file_mgr.h"
+
 void addHabit()
 {
     std::cout << "\033[2J\033[1;1H";

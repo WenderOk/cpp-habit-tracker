@@ -1,4 +1,12 @@
-int get_weekday() {
+#include <iostream>
+#include <ctime>
+
+#include "habit.h"
+#include "shedule_printer.h"
+#include "file_mgr.h"
+
+int get_weekday()
+{
     std::time_t t{std::time(nullptr)};
     int wday{std::localtime(&t)->tm_wday};
     
@@ -92,11 +100,7 @@ void updateProgress()
             std::cout << "Цель достигнута!\n";
         }
     }
-    
-    
-        
         saveToFile();
         std::cout << "Прогресс обновлен!\n";
         wait_input();
-    
 }

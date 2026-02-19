@@ -1,3 +1,15 @@
+#include <iostream>
+
+#include "habit.h"
+#include "updater.h"
+
+void wait_input()
+{
+    std::cout << "Нажмите Enter чтобы продолжить: ";
+    std::cin.ignore();
+    std::cin.get();
+}
+
 void showSchedule()
 {
     std::cout << "\033[2J\033[1;1H";
@@ -9,7 +21,7 @@ void showSchedule()
     for (int i{}; i < 7; i++)
     {
         int cur_wday{get_weekday()};
-        if(i == cur_wday)
+        if(i+1 == cur_wday)
             std::cout << "<<(" << day_names[i] << ")>>" << ":\n";
         else
             std::cout << day_names[i] << ":\n";
