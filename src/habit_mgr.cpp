@@ -7,7 +7,7 @@
 
 void addHabit()
 {
-    std::cout << "\033[2J\033[1;1H";
+    clear();
 
     if (habit_count >= MAX_HABITS)
     {

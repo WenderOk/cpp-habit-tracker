@@ -14,14 +14,22 @@ const char* fileName = "habits_data.txt";
 #include "updater.h"
 #include "shedule_printer.h"
 
+void setEncoding()
+{
+    #ifdef _WIN32
+        std::system("chcp 65001");
+    #endif
+}
+
 int main()
 {
+    setEncoding();
     loadFromFile();
     
     int choice{};
     do 
     {
-        std::cout << "\033[2J\033[1;1H"; // Для очищения консоли
+        std::cout << "\033[2J\033[1;1H" << std::flush; // Для очищения консоли
         std::cout << "\n===== ТРЕКЕР ПРИВЫЧЕК =====\n";
         std::cout << "1. Добавить привычку\n";
         std::cout << "2. Удалить привычку\n";

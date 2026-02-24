@@ -10,12 +10,12 @@ int get_weekday()
     std::time_t t{std::time(nullptr)};
     int wday{std::localtime(&t)->tm_wday};
     
-    return (wday == 0) ? 6 : wday;
+    return (wday == 0) ? 6 : wday-1;
 }
 
 void updateProgress()
 {
-    std::cout << "\033[2J\033[1;1H";
+    clear();
     if (habit_count == 0)
     {
         std::cout << "Список привычек пуст\n";
@@ -75,7 +75,6 @@ void updateProgress()
     else 
     {
         std::cout << "Введите текущее значение: ";
-        std::cin >> h.current_value[cur_wday];
         int input{};
 
         while(true) // Проверка на корректность ввода

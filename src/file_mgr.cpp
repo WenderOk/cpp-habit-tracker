@@ -19,10 +19,10 @@ void saveToFile()
             std::fprintf(file, "%d\n", habits[i].target_value);
             for (int j{}; j < 7; j++)
                 std::fprintf(file, "%d\n", habits[i].current_value[j]);
-            
         }
         else
         {
+            std::fprintf(file, "%d\n", habits[i].target_value);
             for (int j{}; j < 7; j++)
                 std::fprintf(file, "%d\n", habits[i].completed[j]);
         }

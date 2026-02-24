@@ -3,6 +3,15 @@
 #include "habit.h"
 #include "updater.h"
 
+void clear()
+{
+    #ifdef _WIN32
+        std::system("cls");
+    #else
+        std::system("clear");
+    #endif
+}
+
 void wait_input()
 {
     std::cout << "Нажмите Enter чтобы продолжить: ";
@@ -12,7 +21,7 @@ void wait_input()
 
 void showSchedule()
 {
-    std::cout << "\033[2J\033[1;1H";
+    clear();
 
     const char* day_names[7]{"Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"};
     
@@ -21,7 +30,7 @@ void showSchedule()
     for (int i{}; i < 7; i++)
     {
         int cur_wday{get_weekday()};
-        if(i+1 == cur_wday)
+        if(i == cur_wday)
             std::cout << "<<(" << day_names[i] << ")>>" << ":\n";
         else
             std::cout << day_names[i] << ":\n";
