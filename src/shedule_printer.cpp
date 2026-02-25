@@ -5,11 +5,12 @@
 
 void clear()
 {
-    #ifdef _WIN32
-        std::system("cls");
-    #else
-        std::system("clear");
-    #endif
+    std::cout << "\033[2J\033[1;1H" << std::flush;
+    // #ifdef _WIN32
+    //     std::system("cls");
+    // #else
+    //     std::system("clear");
+    // #endif
 }
 
 void wait_input()
