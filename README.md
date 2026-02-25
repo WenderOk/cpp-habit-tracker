@@ -28,7 +28,7 @@
 ![bash screenshot](/previews/preview_bash.png)
 - Windows PowerShell 5.1.26100.7705 <br>
 ![powershell_win screenshot](/previews/preview_powershell-5.1.png)
-- Windows PowerShell 7.5.4 <br>
+- PowerShell 7.5.4 <br>
 ![powershell_win screenshot](/previews/preview_powershell-7.5.png)
 - CMD 10.0.26100.7309 <br>
 ![cmd screenshot](/previews/preview_cmd.png) <br>
