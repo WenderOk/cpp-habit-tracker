@@ -30,7 +30,7 @@
 ![powershell_win screenshot](/previews/preview_powershell-5.1.png)
 - Windows PowerShell 7.5.4 <br>
 ![powershell_win screenshot](/previews/preview_powershell-7.5.png)
-- CMD <br>
+- CMD 10.0.26100.7309 <br>
 ![cmd screenshot](/previews/preview_cmd.png) <br>
 В Windows 10 и в более старых версиях оболочек может потребоваться доп. настройка для поддержки кириллицы в названиях привычек.
 ---
