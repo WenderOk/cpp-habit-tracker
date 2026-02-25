@@ -26,8 +26,12 @@
 Тестировалось на:<br>
 - bash 5.3.9 <br>
 ![bash screenshot](/previews/preview_bash.png)
-- Windows PowerShell 5.1.26100.7705
-- CMD 
+- Windows PowerShell 5.1.26100.7705 <br>
+![powershell_win screenshot](/previews/preview_powershell-5.1.png)
+- Windows PowerShell 7.5.4 <br>
+![powershell_win screenshot](/previews/preview_powershell-7.5.png)
+- CMD <br>
+![cmd screenshot](/previews/preview_cmd.png) <br>
 В Windows 10 и в более старых версиях оболочек может потребоваться доп. настройка для поддержки кириллицы в названиях привычек.
 ---
 ## Структура файла с данными
